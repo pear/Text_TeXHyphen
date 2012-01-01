@@ -201,9 +201,9 @@ class TextTeXHyphenPatternDBObjectHashTest extends PHPUnit_Framework_TestCase
         }
     } // end of function testInitialize
 
-    function testGetPattern()
+    public function testGetPattern1()
     {
-        $testArr = array(
+        $test =
             array('patternStrArr' => array(
                       '.ve5ra', '.wil5i', '.ye4', '4ab.', 'a5bal'),
                   'onlyKeys' => false,
@@ -215,7 +215,22 @@ class TextTeXHyphenPatternDBObjectHashTest extends PHPUnit_Framework_TestCase
                       '.wili' => '.wil5i',
                       '.ye' => '.ye4',
                       '.f.g' => false)
-                 ),
+                 );
+
+        $this->patternDB->initialize($test['patternStrArr'], $test['onlyKeys'], $test['sort']);
+        foreach ($test['result'] as $key => $patternStr) {
+            $pattern = $this->patternDB->getPattern($key);
+
+            $this->assertTrue(is_a($pattern, 'Text_TeXHyphen_Pattern'));
+            $this->assertEquals($key, $pattern->getKey());
+            $this->assertEquals($patternStr, $pattern->getPattern());
+        }
+    } // end of function testGetPattern
+
+
+    public function testGetPattern2()
+    {
+        $test = 
             array('patternStrArr' => array(
                       '.ve5ra', '.wil5i', '.ye4', '4ab.', 'a5bal'),
                   'onlyKeys' => true,
@@ -228,24 +243,17 @@ class TextTeXHyphenPatternDBObjectHashTest extends PHPUnit_Framework_TestCase
                       'abal' => 'a5bal',
                       '.f.g' => false,
                       '1234' => false)
-                ),
-        );
+                );
 
-       foreach ($testArr as $test) {
-            $this->setUp();
-            $this->patternDB->initialize($test['patternStrArr'], $test['onlyKeys'], $test['sort']);
-            foreach ($test['result'] as $key => $patternStr) {
-                $pattern = $this->patternDB->getPattern($key);
-                if (false !== $pattern) {
-                    $this->assertTrue(is_a($pattern, 'Text_TeXHyphen_Pattern'));
-                    $this->assertEquals($key, $pattern->getKey());
-                    $this->assertEquals($patternStr, $pattern->getPattern());
-                } else {
-                    $this->assertFalse($patternStr);
-                }
-            }
-            $this->tearDown();
+        $this->patternDB->initialize($test['patternStrArr'], $test['onlyKeys'], $test['sort']);
+        foreach ($test['result'] as $key => $patternStr) {
+            $pattern = $this->patternDB->getPattern($key);
+
+            $this->assertTrue(is_a($pattern, 'Text_TeXHyphen_Pattern'));
+            $this->assertEquals($key, $pattern->getKey());
+            $this->assertEquals($patternStr, $pattern->getPattern());           
         }
+
     } // end of function testGetPattern
 
     function testSerialize()
@@ -258,5 +266,4 @@ class TextTeXHyphenPatternDBObjectHashTest extends PHPUnit_Framework_TestCase
 
     } // end of function testSerialize
 
-} // end of class Text_TeXHyphen_ObjectHash_TestCase
-?>
+}
