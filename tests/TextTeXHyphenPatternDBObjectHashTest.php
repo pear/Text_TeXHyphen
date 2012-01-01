@@ -68,15 +68,12 @@ class TextTeXHyphenPatternDBObjectHashTest extends PHPUnit_Framework_TestCase
             $err = array();
 
             $msg = sprintf('Type: %s, options: %s', $test['type'], serialize($test['options']));
-            $oh = Text_TeXHyphen_PatternDB_ObjectHash::factory($test['type'], $test['options']);
+            try {
+                $oh = Text_TeXHyphen_PatternDB_ObjectHash::factory($test['type'], $test['options']);
 
-            if (false === $test['result']) {
-                $this->assertFalse($oh, $msg);
-
-                $this->assertEquals($test['msg'], $err['message']);
-            } else {
-                $this->assertTrue(is_a($oh, 'Text_TeXHyphen_ObjectHash'));
-
+                $this->assertTrue(is_a($oh, 'Text_TeXHyphen_PatternDB_ObjectHash'), get_class($oh));
+            } catch (InvalidArgumentException $iae) {
+                $this->assertEquals($test['msg'], $iae->getMessage());
             }
         }
     } // end of function testFactory
@@ -102,22 +99,18 @@ class TextTeXHyphenPatternDBObjectHashTest extends PHPUnit_Framework_TestCase
                   'sort'=> true,
                   'result' => true,
                   'errors' => 3,
-                  'msg' => array('Duplicate pattern string found!',
-                                 'Couldn\'t create Text_TeXHyphen_Pattern object!',
-                                 'Couldn\'t create Text_TeXHyphen_Pattern object!'))
+                  'msg' => array('Couldn\'t create Text_TeXHyphen_Pattern object!'))
             );
 
         foreach ($testArr1 as $test) {
             $this->setUp();
 
-            $result = $this->patternDB->initialize($test['patternStrArr'], $test['onlyKeys'], $test['sort']);
-            $this->assertEquals($test['result'], $result);
-/*
-            $err = $errorStack->getErrors();
-            for ($i = 0; $i < $test['errors']; $i++) {
-                $this->assertEquals($test['msg'][$i], $err[$i]['message']);
+            try {
+                $result = $this->patternDB->initialize($test['patternStrArr'], $test['onlyKeys'], $test['sort']);
+                $this->assertEquals($test['result'], $result);
+            } catch (InvalidArgumentException $iae) {
+                $this->assertEquals($test['msg'][0], $iae->getMessage());
             }
-*/
             $this->tearDown();
         }
 
