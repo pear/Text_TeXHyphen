@@ -94,7 +94,7 @@ class Text_TeXHyphen
      *
      * @access public
      */
-    function factory($patternDB, $options = array())
+    public static function factory($patternDB, $options = array())
     {
         $hyphen = new Text_TeXHyphen();
 

@@ -72,7 +72,7 @@ class Text_TeXHyphen_PatternDB_ObjectHash extends Text_TeXHyphen_PatternDB
      *
      * @access public
      */
-    function factory($type, $options = array())
+    public static function factory($type, $options = array())
     {
         $type = strtolower($type);
         if (0 !== strcasecmp($type, 'objecthash')) {
