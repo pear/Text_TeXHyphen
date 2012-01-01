@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package packagerversion="1.9.0RC1" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0
+http://pear.php.net/dtd/tasks-1.0.xsd
+http://pear.php.net/dtd/package-2.0
+http://pear.php.net/dtd/package-2.0.xsd">
+ <name>Text_TeXHyphen</name>
+ <channel>pear.php.net</channel>
+ <summary>Implements the TeX hyphenation algotithm.</summary>
+ <description>This package hyphenates words by applying the TeX algorithm for automated hyphenation.
+ </description>
+ <lead>
+  <name>Stefan Ohrmann</name>
+  <user>ohrmann</user>
+  <email>bshell@gmx.net</email>
+  <active>yes</active>
+ </lead>
+ <date>2010-03-14</date>
+ <time>22:29:14</time>
+ <version>
+  <release>0.1.0</release>
+  <api>0.1.0</api>
+ </version>
+ <stability>
+  <release>alpha</release>
+  <api>alpha</api>
+ </stability>
+ <license uri="http://www.php.net/license">PHP</license>
+ <notes>
+Initial release.
+ </notes>
+ <contents>
+  <dir name="/">
+   <dir name="data">
+    <dir name="Text_TeXHyphen">
+     <dir name="original">
+      <file name="dehyphn.tex" role="data" />
+      <file name="hyphen.tex" role="data" />
+      <file name="ukhyph.tex" role="data" />
+     </dir> <!-- /data/Text_TeXHyphen/original -->
+     <file name="de_pattern.txt" role="data" />
+     <file name="en-GB_exceptions.txt" role="data" />
+     <file name="en-GB_pattern.txt" role="data" />
+     <file name="en-US_exceptions.txt" role="data" />
+     <file name="en-US_pattern.txt" role="data" />
+    </dir> <!-- /data/Text_TeXHyphen -->
+   </dir> <!-- /data -->
+   <dir name="docs">
+    <dir name="Text_TeXHyphen">
+     <dir name="examples">
+      <file name="en_sample.txt" role="doc" />
+      <file name="form.php" role="doc" />
+      <file name="plain.php" role="doc" />
+     </dir> <!-- /docs/Text_TeXHyphen/examples -->
+    </dir> <!-- /docs/Text_TeXHyphen -->
+   </dir> <!-- /docs -->
+   <dir name="tests">
+    <dir name="Text_TeXHyphen">
+     <file name="TeXHyphen_PatternDB_ObjectHash_TestCase.php" role="test" />
+     <file name="TeXHyphen_Pattern_TestCase.php" role="test" />
+    </dir> <!-- /tests/Text_TeXHyphen -->
+   </dir> <!-- /tests -->
+   <dir name="Text">
+    <dir name="TeXHyphen">
+     <dir name="PatternDB">
+      <file name="objecthash.php" role="php" />
+     </dir> <!-- /Text/TeXHyphen/PatternDB -->
+     <dir name="WordCache">
+      <file name="simplehash.php" role="php" />
+     </dir> <!-- /Text/TeXHyphen/WordCache -->
+     <file name="Pattern.php" role="php" />
+     <file name="PatternDB.php" role="php" />
+     <file name="PatternValidator.php" role="php" />
+     <file name="WordCache.php" role="php" />
+    </dir> <!-- /Text/TeXHyphen -->
+    <file name="TeXHyphen.php" role="php" />
+   </dir> <!-- /Text -->
+  </dir> <!-- / -->
+ </contents>
+ <dependencies>
+  <required>
+   <php>
+    <min>4.0.0</min>
+   </php>
+   <pearinstaller>
+    <min>1.4.0b1</min>
+   </pearinstaller>
+  </required>
+ </dependencies>
+ <phprelease>
+  <filelist>
+   <install as="TeXHyphen_PatternDB_ObjectHash_TestCase.php" name="tests/Text_TeXHyphen/TeXHyphen_PatternDB_ObjectHash_TestCase.php" />
+   <install as="TeXHyphen_Pattern_TestCase.php" name="tests/Text_TeXHyphen/TeXHyphen_Pattern_TestCase.php" />
+   <install as="original/dehyphn.tex" name="data/Text_TeXHyphen/original/dehyphn.tex" />
+   <install as="original/hyphen.tex" name="data/Text_TeXHyphen/original/hyphen.tex" />
+   <install as="original/ukhyph.tex" name="data/Text_TeXHyphen/original/ukhyph.tex" />
+   <install as="de_pattern.txt" name="data/Text_TeXHyphen/de_pattern.txt" />
+   <install as="en-US_pattern.txt" name="data/Text_TeXHyphen/en-US_pattern.txt" />
+   <install as="en-US_exceptions.txt" name="data/Text_TeXHyphen/en-US_exceptions.txt" />
+   <install as="en-GB_pattern.txt" name="data/Text_TeXHyphen/en-GB_pattern.txt" />
+   <install as="en-GB_exceptions.txt" name="data/Text_TeXHyphen/en-GB_exceptions.txt" />
+   <install as="examples/plain.php" name="docs/Text_TeXHyphen/examples/plain.php" />
+   <install as="examples/en_sample.txt" name="docs/Text_TeXHyphen/examples/en_sample.txt" />
+   <install as="examples/form.php" name="docs/Text_TeXHyphen/examples/form.php" />
+  </filelist>
+ </phprelease>
+</package>
