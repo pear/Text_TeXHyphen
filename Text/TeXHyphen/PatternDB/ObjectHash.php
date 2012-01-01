@@ -211,7 +211,8 @@ class Text_TeXHyphen_PatternDB_ObjectHash extends Text_TeXHyphen_PatternDB
             }
 
             if ($onlyKeys) {
-                $key = Text_TeXHyphen_Pattern::createKey($patternStr);
+                $p = new Text_TeXHyphen_Pattern();
+                $key = $p->createKey($patternStr);
             } else {
                 $pattern = Text_TeXHyphen_Pattern::factory($patternStr);
                 if (false === $pattern) {
