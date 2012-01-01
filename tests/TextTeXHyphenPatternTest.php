@@ -73,8 +73,9 @@ class TextTeXHyphenPatternTest extends PHPUnit_Framework_TestCase
                          '.ab5c' => true,
                          'abd5g' => true);
 
+        $p = new Text_TeXHyphen_Pattern();
         foreach ($testArr as $test => $expected) {
-            $result = Text_TeXHyphen_Pattern::isValid($test);
+            $result = $p->isValid($test);
             $msg = sprintf('Tested string: "%s", ', $test);
             if (true === $expected) {
                 $this->assertTrue($result, $msg);
