@@ -23,17 +23,6 @@
  */
 
 /**
- */
-require_once 'PEAR/ErrorStack.php';
-
-/**
- */
-define('TEXT_TEXHYPHEN_ERROR', 0);
-define('TEXT_TEXHYPHEN_ERROR_STR', 'Error');
-define('TEXT_TEXHYPHEN_NOTICE', 1);
-define('TEXT_TEXHYPHEN_NOTICE_STR', 'Notice');
-
-/**
  * The class for the hyphenation of words with the TeX algorithm.
  *
  * @package Text_TeXHyphen
@@ -84,27 +73,6 @@ class Text_TeXHyphen
      */
     var $_wordCache = null;
 
-    /**
-     * Reference to the error stack.
-     *
-     * @var PEAR_ErrorStack
-     *
-     * @access private
-     */
-    var $_errorStack;
-
-    /**
-     * Constructor of a Text_TeXHyphen object.
-     *
-     * At contruction of a Text_TeXHyphen object the error stack will
-     * referencing to the 'Text_TeXHyphen' error stack.
-     *
-     * @access public
-     */
-    function Text_TeXHyphen()
-    {
-        $this->_errorStack = PEAR_ErrorStack::singleton('Text_TeXHyphen');
-    }
 
     /**
      * Factory for creating a Text_TeXHyphen object.
@@ -126,29 +94,18 @@ class Text_TeXHyphen
      *
      * @access public
      */
-    function &factory(&$patternDB, $options = array())
+    function factory($patternDB, $options = array())
     {
-        $errorStack = PEAR_ErrorStack::singleton('Text_TeXHyphen');
-
         $hyphen = new Text_TeXHyphen();
 
         if (!$hyphen->setPatternDB($patternDB)) {
-            $errorStack->push(
-                TEXT_TEXHYPHEN_ERROR,
-                TEXT_TEXHYPHEN_ERROR_STR,
-                array('patternDB' => $patternDB),
-                'Invalid pattern database!');
-            return false;
+            throw new InvalidArgumentException('Invalid pattern database!');
         }
 
         if (isset($options['wordcache'])) {
             $wordCache = $options['wordcache'];
             if (!$hyphen->setWordCache($wordCache)) {
-                $errorStack->push(
-                    TEXT_TEXHYPHEN_NOTICE,
-                    TEXT_TEXHYPHEN_NOTICE_STR,
-                    array('wordCache' => $wordCache),
-                    'Invalid word cache!');
+                throw new InvalidArgumentException('Invalid word cache!');
             }
         }
 

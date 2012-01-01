@@ -21,19 +21,6 @@
  */
 
 /**
- *
- */
-require_once 'PEAR/ErrorStack.php';
-
-/**
- *
- */
-define('TEXT_TEXHYPHEN_PATTERNDB_ERROR', 2);
-define('TEXT_TEXHYPHEN_PATTERNDB_ERROR_STR', 'Error');
-define('TEXT_TEXHYPHEN_PATTERNDB_NOTICE', 3);
-define('TEXT_TEXHYPHEN_PATTERNDB_NOTICE_STR', 'Notice');
-
-/**
  * The abstract of the pattern database class for the TeX hyphenation
  * algorithm.
  *
@@ -56,29 +43,6 @@ class Text_TeXHyphen_PatternDB
     var $_validator = null;
 
     /**
-     * The 'Text_TeXHyphen' error stack.
-     *
-     * @var PEAR_ErrorStack Reference to a PEAR_ErrorStack object.
-     *
-     * @access private
-     */
-    var $_errorStack;
-
-    /**
-     * Constructor of a Text_TeXHyphen_PatternDB object.
-     *
-     * At contruction of a Text_TeXHyphen_PatternDB object the
-     * error stack will referenced to the 'Text_TeXHyphen' error
-     * stack.
-     *
-     * @access public
-     */
-    function Text_TeXHyphen_PatternDB()
-    {
-        $this->_errorStack = PEAR_ErrorStack::singleton('Text_TeXHyphen');
-    }
-
-    /**
      * Factory for creating a pattern database.
      *
      * @param string $type Name of the pattern database implementation.
@@ -90,10 +54,8 @@ class Text_TeXHyphen_PatternDB
      *
      * @access public
      */
-    function &factory($type, $options = array())
+    function factory($type, $options = array())
     {
-        $errorStack = PEAR_ErrorStack::singleton('Text_TeXHyphen');
-
         $type = strtolower($type);
 
         @include_once 'Text/TeXHyphen/PatternDB/'.$type.'.php';
@@ -101,12 +63,7 @@ class Text_TeXHyphen_PatternDB
         $classname = 'Text_TeXHyphen_PatternDB_'.$type;
 
         if (!class_exists($classname)) {
-            $errorStack->push(
-                TEXT_TEXHYPHEN_PATTERNDB_ERROR,
-                TEXT_TEXHYPHEN_PATTERNDB_ERROR_STR,
-                array('classname' => $classname),
-                'Unable to include class file!');
-            return false;
+            throw new InvalidArgumentException("Could not build " . $classname);
         }
 
         $obj = call_user_func_array(array($classname,'factory'), array($type, $options));
@@ -129,10 +86,9 @@ class Text_TeXHyphen_PatternDB
      *
      * @access public
      */
-    function &getPattern($key)
+    function getPattern($key)
     {
         return false;
     } // end of function getPattern
 
-} // end of class Text_TeXHyphen_PatternDB
-?>
+}

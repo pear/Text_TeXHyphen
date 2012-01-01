@@ -23,7 +23,6 @@
 
 /**
  */
-require_once 'PEAR/ErrorStack.php';
 require_once 'Text/TeXHyphen/WordCache.php';
 
 /**
@@ -60,18 +59,12 @@ class Text_TeXHyphen_WordCache_SimpleHash extends Text_TeXHyphen_WordCache
      *
      * @access public
      */
-    function &factory($type, $options = array())
+    function factory($type, $options = array())
     {
-        $errorStack = PEAR_ErrorStack::singleton('Text_TeXHyphen');
 
         $type = strtolower($type);
         if (0 !== strcasecmp($type, 'simplehash')) {
-            $errorStack->push(
-                TEXT_TEXHYPHEN_WORDCACHE_ERROR,
-                TEXT_TEXHYPHEN_WORDCACHE_ERROR_STR,
-                array('type' => $type),
-                'Invalid type was set!');
-            return false;
+            throw new InvalidArgumentException('Invalid type was set!');
         }
 
         $wc = new Text_TeXHyphen_WordCache_SimpleHash;
@@ -148,11 +141,7 @@ class Text_TeXHyphen_WordCache_SimpleHash extends Text_TeXHyphen_WordCache
          }
 
         if (false === $data) {
-            $this->_errorStack->push(TEXT_TEXHYPHEN_WORDCACHE_ERROR,
-                                     TEXT_TEXHYPHEN_WORDCACHE_ERROR_STR,
-                                     array(),
-                                     'Couldn\'t compress serialized the hash data');
-            return false;
+            throw new InvalidArgumentException('Couldn\'t compress serialized the hash data');
         }
 
         return $data;
@@ -180,25 +169,16 @@ class Text_TeXHyphen_WordCache_SimpleHash extends Text_TeXHyphen_WordCache
         }
 
         if (false === $data) {
-            $this->_errorStack->push(TEXT_TEXHYPHEN_WORDCACHE_ERROR,
-                                     TEXT_TEXHYPHEN_WORDCACHE_ERROR_STR,
-                                     array(),
-                                     'Couldn\'t uncompress serialized the hash data');
-            return false;
+            throw new InvalidArgumentException('Couldn\'t uncompress serialized the hash data');
         }
 
         $this->_hash = unserialize($data);
         if (false === $this->_hash) {
             $this->_hash = array();
-            $this->_errorStack->push(TEXT_TEXHYPHEN_WORDCACHE_ERROR,
-                                     TEXT_TEXHYPHEN_WORDCACHE_ERROR_STR,
-                                     array(),
-                                     'Couldn\'t unserialize the hash data');
-            return false;
+            throw new InvalidArgumentException('Couldn\'t unserialize the hash data');
         }
 
         return true;
     } // end of function unserialize
 
-} // end of class Text_TeXHyphen_WordCache_SimpleHash
-?>
+}

@@ -21,9 +21,6 @@
  * @package Text_TeXHyphen
  */
 
-/**
- */
-require_once 'PEAR/ErrorStack.php';
 require_once 'Text/TeXHyphen/PatternDB.php';
 require_once 'Text/TeXHyphen/Pattern.php';
 
@@ -77,26 +74,13 @@ class Text_TeXHyphen_PatternDB_ObjectHash extends Text_TeXHyphen_PatternDB
      */
     function factory($type, $options = array())
     {
-        $errorStack = PEAR_ErrorStack::singleton('Text_TeXHyphen');
-
         $type = strtolower($type);
         if (0 !== strcasecmp($type, 'objecthash')) {
-            $errorStack->push(
-                TEXT_TEXHYPHEN_PATTERNDB_ERROR,
-                TEXT_TEXHYPHEN_PATTERNDB_ERROR_STR,
-                array('type' => $type),
-                'Invalid type was set!');
-            return false;
+            throw new InvalidArgumentException('Invalid type was set!');
         }
 
         if (!isset($options['mode'])) {
-            $errorStack->push(
-                TEXT_TEXHYPHEN_PATTERNDB_ERROR,
-                TEXT_TEXHYPHEN_PATTERNDB_ERROR_STR,
-                array('options' => $options),
-                'No creation mode was set!');
-
-            return false;
+            throw new InvalidArgumentException('No creation mode was set!');
         }
 
         $oh = new Text_TeXHyphen_PatternDB_ObjectHash;
@@ -105,14 +89,7 @@ class Text_TeXHyphen_PatternDB_ObjectHash extends Text_TeXHyphen_PatternDB
         switch ($mode) {
         case 'build':
             if (!isset($options['data'])) {
-
-                $errorStack->push(
-                    TEXT_TEXHYPHEN_PATTERNDB_ERROR,
-                    TEXT_TEXHYPHEN_PATTERNDB_ERROR_STR,
-                    array('options' => $options),
-                    'Invalid creation data was set!');
-
-                return false;
+                throw new InvalidArgumentException('Invalid creation data was set!');
             }
 
             $onlyKeys = (isset($options['onlyKeys']) && is_bool($options['onlyKeys']))
@@ -125,11 +102,7 @@ class Text_TeXHyphen_PatternDB_ObjectHash extends Text_TeXHyphen_PatternDB
 
             if (false === $oh->initialize($options['data'], $onlyKeys, $sort)) {
 
-                $errorStack->push(
-                    TEXT_TEXHYPHEN_PATTERNDB_ERROR,
-                    TEXT_TEXHYPHEN_PATTERNDB_ERROR_STR,
-                    array('data' => $options['data']),
-                    'Couldn\'t initialize object hash!');
+               throw new InvalidArgumentException('Couldn\'t initialize object hash!');
 
                 return false;
             }
@@ -137,14 +110,7 @@ class Text_TeXHyphen_PatternDB_ObjectHash extends Text_TeXHyphen_PatternDB
 
         case 'load':
             if (!isset($options['fileName'])) {
-
-                $errorStack->push(
-                    TEXT_TEXHYPHEN_PATTERNDB_ERROR,
-                    TEXT_TEXHYPHEN_PATTERNDB_ERROR_STR,
-                    array('options' => $options),
-                    'No file name was set!');
-
-                return false;
+                throw new InvalidArgumentException('No file name was set!');
             }
 
             $compression = (isset($options['compression']) && is_bool($options['compression']))
@@ -154,37 +120,16 @@ class Text_TeXHyphen_PatternDB_ObjectHash extends Text_TeXHyphen_PatternDB
             $data = @file_get_contents($options['fileName']);
 
             if (false === $data) {
-
-                $errorStack->push(
-                    TEXT_TEXHYPHEN_PATTERNDB_ERROR,
-                    TEXT_TEXHYPHEN_PATTERNDB_ERROR_STR,
-                    array('fileName' => $options['fileName']),
-                    'Couldn\'t open file!');
-
-                return false;
+                throw new InvalidArgumentException('Couldn\'t open file!');
             }
 
             if (false === $oh->unserialize($data, $compression)) {
-
-                $errorStack->push(
-                    TEXT_TEXHYPHEN_PATTERNDB_ERROR,
-                    TEXT_TEXHYPHEN_PATTERNDB_ERROR_STR,
-                    array('fileName' => $options['fileName']),
-                    'Couldn\'t load object hash data from file!');
-
-                return false;
+                throw new InvalidArgumentException('Couldn\'t load object hash data from file!');
             }
             break;
 
         default:
-            $errorStack->push(
-                TEXT_TEXHYPHEN_PATTERNDB_ERROR,
-                TEXT_TEXHYPHEN_PATTERNDB_ERROR_STR,
-                array('mode' => $mode),
-                'Invalid creation mode was set!');
-
-            return false;
-            break;
+           throw new InvalidArgumentException('Invalid creation mode was set!');
         }
 
         return $oh;
@@ -206,7 +151,7 @@ class Text_TeXHyphen_PatternDB_ObjectHash extends Text_TeXHyphen_PatternDB
      * @access public
      */
       function getPattern($key)
-    {
+      {
         if (!isset($this->_hash[$key])) {
             return false;
         }
@@ -217,11 +162,7 @@ class Text_TeXHyphen_PatternDB_ObjectHash extends Text_TeXHyphen_PatternDB
             $newpattern = Text_TeXHyphen_Pattern::factory($pattern);
             if (false === $newpattern) {
                 // Logging Notice
-                $this->_errorStack->push(
-                    TEXT_TEXHYPHEN_PATTERNDB_NOTICE,
-                    TEXT_TEXHYPHEN_PATTERNDB_NOTICE_STR,
-                    array('patternStr' => $pattern),
-                    'Couldn\'t create Text_TeXHyphen_Pattern object!');
+                throw new InvalidArgumentException('Couldn\'t create Text_TeXHyphen_Pattern object!');
                 return false;
             }
 
@@ -258,25 +199,14 @@ class Text_TeXHyphen_PatternDB_ObjectHash extends Text_TeXHyphen_PatternDB
     function initialize($patternStrArr, $onlyKeys = false, $sort = true)
     {
         if (!is_array($patternStrArr) || empty($patternStrArr)) {
-            $this->_errorStack->push(
-                TEXT_TEXHYPHEN_PATTERNDB_ERROR,
-                TEXT_TEXHYPHEN_PATTERNDB_ERROR_STR,
-                array('patternStrArr' => $patternStrArr),
-                'Invalid pattern string array');
-            return false;
+            throw new InvalidArgumentException('Invalid pattern string array');
         }
 
         foreach ($patternStrArr as $patternStr) {
 
             if (!is_null($this->_validator)) {
                 if (!$this->_validator->isValid($patternStr)) {
-                    // Logging Notice
-                    $this->_errorStack->push(
-                        TEXT_TEXHYPHEN_PATTERNDB_NOTICE,
-                        TEXT_TEXHYPHEN_PATTERNDB_NOTICE_STR,
-                        array('patternStr' => $patternStr),
-                        'Invalid pattern string!');
-                    continue;
+                    throw new InvalidArgumentException('Invalid pattern string!');
                 }
             }
 
@@ -285,13 +215,7 @@ class Text_TeXHyphen_PatternDB_ObjectHash extends Text_TeXHyphen_PatternDB
             } else {
                 $pattern = Text_TeXHyphen_Pattern::factory($patternStr);
                 if (false === $pattern) {
-                // Logging Notice
-                    $this->_errorStack->push(
-                        TEXT_TEXHYPHEN_PATTERNDB_NOTICE,
-                        TEXT_TEXHYPHEN_PATTERNDB_NOTICE_STR,
-                        array('patternStr' => $patternStr),
-                        'Couldn\'t create Text_TeXHyphen_Pattern object!');
-                continue;
+                    throw new InvalidArgumentException('Couldn\'t create Text_TeXHyphen_Pattern object!');
                 }
                 $key = $pattern->getKey();
             }
@@ -303,12 +227,7 @@ class Text_TeXHyphen_PatternDB_ObjectHash extends Text_TeXHyphen_PatternDB
                     $this->_hash[$key] = $pattern;
                 }
             } else {
-                // Logging Notice
-                $this->_errorStack->push(
-                    TEXT_TEXHYPHEN_PATTERNDB_NOTICE,
-                    TEXT_TEXHYPHEN_PATTERNDB_NOTICE_STR,
-                    array('patternStr' => $patternStr),
-                    'Duplicate pattern string found!');
+                throw new InvalidArgumentException('Duplicate pattern string found!');
             }
         }
 
@@ -348,11 +267,7 @@ class Text_TeXHyphen_PatternDB_ObjectHash extends Text_TeXHyphen_PatternDB
          }
 
         if (false === $data) {
-            $this->_errorStack->push(TEXT_TEXHYPHEN_PATTERNDB_ERROR,
-                                     TEXT_TEXHYPHEN_PATTERNDB_ERROR_STR,
-                                     array(),
-                                     'Couldn\'t compress serialized pattern hash data');
-            return false;
+            throw new InvalidArgumentException('Couldn\'t compress serialized pattern hash data');
         }
 
         return $data;
@@ -381,21 +296,13 @@ class Text_TeXHyphen_PatternDB_ObjectHash extends Text_TeXHyphen_PatternDB
         }
 
         if (false === $data) {
-            $this->_errorStack->push(TEXT_TEXHYPHEN_PATTERNDB_ERROR,
-                                     TEXT_TEXHYPHEN_PATTERNDB_ERROR_STR,
-                                     array(),
-                                     'Couldn\'t uncompress serialized pattern hash data');
-            return false;
+            throw new InvalidArgumentException('Couldn\'t uncompress serialized pattern hash data');
         }
 
         $this->_hash = unserialize($data);
         if (false === $this->_hash) {
             $this->_hash = array();
-            $this->_errorStack->push(TEXT_TEXHYPHEN_PATTERNDB_ERROR,
-                                     TEXT_TEXHYPHEN_PATTERNDB_ERROR_STR,
-                                     array(),
-                                     'Couldn\'t unserialize pattern hash data');
-            return false;
+            throw new InvalidArgumentException('Couldn\'t unserialize pattern hash data');
         }
 
         return true;
