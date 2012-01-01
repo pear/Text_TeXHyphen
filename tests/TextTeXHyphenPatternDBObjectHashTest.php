@@ -62,28 +62,28 @@ class TextTeXHyphenPatternDBObjectHashTest extends PHPUnit_Framework_TestCase
                   'msg'=> ''),
         );
 
-        $errorStack = PEAR_ErrorStack::singleton('Text_TeXHyphen');
+        
 
         foreach ($testArr as $test) {
             $err = array();
-            $errorStack->getErrors(true);
+
             $msg = sprintf('Type: %s, options: %s', $test['type'], serialize($test['options']));
             $oh = Text_TeXHyphen_PatternDB_ObjectHash::factory($test['type'], $test['options']);
 
             if (false === $test['result']) {
                 $this->assertFalse($oh, $msg);
-                $err = $errorStack->pop();
+
                 $this->assertEquals($test['msg'], $err['message']);
             } else {
                 $this->assertTrue(is_a($oh, 'Text_TeXHyphen_ObjectHash'));
-                $this->assertEquals($errorStack->hasErrors(), 0);
+
             }
         }
     } // end of function testFactory
 
     function testInitialize()
     {
-        $errorStack = PEAR_ErrorStack::singleton('Text_TeXHyphen');
+
 
         // Test patterStrArr check and pattern creation
         $testArr1 = array(
@@ -109,14 +109,15 @@ class TextTeXHyphenPatternDBObjectHashTest extends PHPUnit_Framework_TestCase
 
         foreach ($testArr1 as $test) {
             $this->setUp();
-            $errorStack->getErrors(true);
+
             $result = $this->patternDB->initialize($test['patternStrArr'], $test['onlyKeys'], $test['sort']);
             $this->assertEquals($test['result'], $result);
-            $this->assertEquals($test['errors'], $errorStack->hasErrors());
+/*
             $err = $errorStack->getErrors();
             for ($i = 0; $i < $test['errors']; $i++) {
                 $this->assertEquals($test['msg'][$i], $err[$i]['message']);
             }
+*/
             $this->tearDown();
         }
 
@@ -148,7 +149,7 @@ class TextTeXHyphenPatternDBObjectHashTest extends PHPUnit_Framework_TestCase
 
         foreach ($testArr2 as $test) {
             $this->setUp();
-            $errorStack->getErrors(true);
+
             $this->patternDB->initialize($test['patternStrArr'], $test['onlyKeys'], $test['sort']);
             $result = $this->patternDB->_hash;
             $this->assertEquals($test['result'], $result);
@@ -183,7 +184,7 @@ class TextTeXHyphenPatternDBObjectHashTest extends PHPUnit_Framework_TestCase
 
        foreach ($testArr3 as $test) {
             $this->setUp();
-            $errorStack->getErrors(true);
+
             $this->patternDB->initialize($test['patternStrArr'], $test['onlyKeys'], $test['sort']);
             $result = $this->patternDB->_hash;
             foreach ($result as $key => $pattern) {
