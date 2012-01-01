@@ -75,7 +75,7 @@ class Text_TeXHyphen_PatternDB_ObjectHash extends Text_TeXHyphen_PatternDB
      *
      * @access public
      */
-    function &factory($type, $options = array())
+    function factory($type, $options = array())
     {
         $errorStack = PEAR_ErrorStack::singleton('Text_TeXHyphen');
 
@@ -205,7 +205,7 @@ class Text_TeXHyphen_PatternDB_ObjectHash extends Text_TeXHyphen_PatternDB
      *
      * @access public
      */
-      function &getPattern($key)
+      function getPattern($key)
     {
         if (!isset($this->_hash[$key])) {
             return false;

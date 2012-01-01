@@ -102,7 +102,7 @@ class Text_TeXHyphen_Pattern
      *
      * @access public
      */
-    function &factory($patternStr)
+    function factory($patternStr)
     {
         $pattern = new Text_TeXHyphen_Pattern();
 
