@@ -241,9 +241,13 @@ class TextTeXHyphenPatternDBObjectHashTest extends PHPUnit_Framework_TestCase
     {
         $this->patternDB->initialize($patternArray, $onlyKeys, $sort);
         $pattern = $this->patternDB->getPattern($key);
-        $this->assertTrue(is_a($pattern, 'Text_TeXHyphen_Pattern'));
-        $this->assertEquals($key, $pattern->getKey());
-        $this->assertEquals($patternStr, $pattern->getPattern());
+        if ($patternStr === false) {
+            $this->assertSame(false, $pattern);
+        } else {
+            $this->assertTrue(is_a($pattern, 'Text_TeXHyphen_Pattern'));
+            $this->assertEquals($key, $pattern->getKey());
+            $this->assertEquals($patternStr, $pattern->getPattern());
+        }
     } // end of function testGetPattern
 
     function testSerialize()
