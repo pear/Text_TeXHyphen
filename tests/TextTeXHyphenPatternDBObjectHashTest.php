@@ -194,7 +194,7 @@ class TextTeXHyphenPatternDBObjectHashTest extends PHPUnit_Framework_TestCase
         }
     } // end of function testInitialize
 
-    public function getPattern1Data() 
+    public function getPatternData() 
     {
        $test =
             array('patternStrArr' => array(
@@ -213,23 +213,8 @@ class TextTeXHyphenPatternDBObjectHashTest extends PHPUnit_Framework_TestCase
         foreach ($test['result'] as $key => $patternStr) {
             $data[] = array($key, $patternStr, $test['patternStrArr'], $test['onlyKeys'], $test['sort']);
         }
-        return $data;
-    }
 
-    /** @dataProvider getPattern1Data */
-    public function testGetPattern1($key, $patternStr, $patternArray, $onlyKeys, $sort)
-    {
-        $this->patternDB->initialize($patternArray, $onlyKeys, $sort);
-        $pattern = $this->patternDB->getPattern($key);
-        $this->assertTrue(is_a($pattern, 'Text_TeXHyphen_Pattern'));
-        $this->assertEquals($key, $pattern->getKey());
-        $this->assertEquals($patternStr, $pattern->getPattern());
-    } // end of function testGetPattern
-
-
-    public function testGetPattern2()
-    {
-        $test = 
+        $test =
             array('patternStrArr' => array(
                       '.ve5ra', '.wil5i', '.ye4', '4ab.', 'a5bal'),
                   'onlyKeys' => true,
@@ -244,15 +229,21 @@ class TextTeXHyphenPatternDBObjectHashTest extends PHPUnit_Framework_TestCase
                       '1234' => false)
                 );
 
-        $this->patternDB->initialize($test['patternStrArr'], $test['onlyKeys'], $test['sort']);
         foreach ($test['result'] as $key => $patternStr) {
-            $pattern = $this->patternDB->getPattern($key);
-
-            $this->assertTrue(is_a($pattern, 'Text_TeXHyphen_Pattern'), get_class($pattern));
-            $this->assertEquals($key, $pattern->getKey());
-            $this->assertEquals($patternStr, $pattern->getPattern());           
+            $data[] = array($key, $patternStr, $test['patternStrArr'], $test['onlyKeys'], $test['sort']);
         }
 
+        return $data;
+    }
+
+    /** @dataProvider getPatternData */
+    public function testGetPattern($key, $patternStr, $patternArray, $onlyKeys, $sort)
+    {
+        $this->patternDB->initialize($patternArray, $onlyKeys, $sort);
+        $pattern = $this->patternDB->getPattern($key);
+        $this->assertTrue(is_a($pattern, 'Text_TeXHyphen_Pattern'));
+        $this->assertEquals($key, $pattern->getKey());
+        $this->assertEquals($patternStr, $pattern->getPattern());
     } // end of function testGetPattern
 
     function testSerialize()
